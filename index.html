@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/epubjs@0.3.93/dist/epub.min.js"></script>
+</head>
+<body>
+    <h1>Ler Livro EPUB</h1>
+    <div id="livro"></div>
+    <button type="button" id="prev">&lt;</button>
+    <button type="button" id="next">&gt;</button>
+
+    <script>
+        var ebook = ePub("teste.epub")
+        var rendition = ebook.renderTo("livro", {width: "600px",
+         height:"600px",
+          allowScriptedContent: true})
+        var displayed = rendition.display()
+
+        var prev = document.getElementById("prev")
+        prev.addEventListener("click", function(){
+            rendition.prev();
+        })
+
+        var next = document.getElementById("next")
+        next.addEventListener("click", function(){
+            rendition.next();
+        })
+    </script>
+   
+</body>
+</html>
