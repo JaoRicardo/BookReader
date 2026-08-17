@@ -8,27 +8,43 @@
     <script src="https://cdn.jsdelivr.net/npm/epubjs@0.3.93/dist/epub.min.js"></script>
 </head>
 <body>
-    <h1>Ler Livro EPUB</h1>
+    <h1 style="text-align: center;">Ler Livro EPUB</h1>
+    <div id="bottons"></div>
     <div id="livro"></div>
     <button type="button" id="prev">&lt;</button>
     <button type="button" id="next">&gt;</button>
 
-    <script>
+    <script type="module">
         var ebook = ePub("http://127.0.0.1:8000/api/books/Livro2.epub")
         var rendition = ebook.renderTo("livro", {width: "600px",
          height:"600px",
-          allowScriptedContent: true})
-        var displayed = rendition.display()
+          allowScriptedContent: true});
+        var displayed = rendition.display();
 
-        var prev = document.getElementById("prev")
+        var prev = document.getElementById("prev");
         prev.addEventListener("click", function(){
             rendition.prev();
         })
 
-        var next = document.getElementById("next")
+        var next = document.getElementById("next");
         next.addEventListener("click", function(){
             rendition.next();
         })
+
+        async function obterLivros() {
+            const resposta = await fetch("http://localhost:8000/api/books");
+            const dados = await resposta.json();
+
+            return  dados;
+        }
+
+        const lista = await obterLivros();
+        lista.forEach(element => {
+            const butao = document.createElement("button");
+            butao.textContent = element
+            document.getElementById("bottons").append(butao);
+        });
+
     </script>
    
 </body>
