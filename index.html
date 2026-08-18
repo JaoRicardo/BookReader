@@ -16,6 +16,26 @@
 
     <script type="module">
 
+        class Dado{
+            constructor(valor) {this.valor = valor}
+        }
+
+        const enviar = (dad) => fetch("http://127.0.0.1:8000/recebe/", {
+            method: "POST",
+            headers: {"Content-Type":"application/json"},
+            body: JSON.stringify(dad)
+        });
+
+        enviar(new Dado(122));
+        async function ixe() { // retorna lista de livros 
+            const resposta = await fetch("http://localhost:8000/envia/");
+            const dados = await resposta.json();
+
+            return  dados;
+        }
+        const a = await ixe();
+        console.log(a)
+
         let ebook = ePub();
         let redention = null
 
