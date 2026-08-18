@@ -15,34 +15,50 @@
     <button type="button" id="next">&gt;</button>
 
     <script type="module">
-        var ebook = ePub("http://127.0.0.1:8000/api/books/Livro2.epub")
-        var rendition = ebook.renderTo("livro", {width: "600px",
-         height:"600px",
-          allowScriptedContent: true});
-        var displayed = rendition.display();
 
-        var prev = document.getElementById("prev");
+        let ebook = ePub();
+        let redention = null
+
+        async function book(urlLivro){ //Função para receber url do livro e abrilo
+
+            if(redention){
+                redention.destroy();
+            }
+            await ebook.open(urlLivro);
+            redention = ebook.renderTo("livro", {width: "600px",
+            height:"800px",
+            allowScriptedContent: true});
+            await redention.display();
+        }
+
+        var prev = document.getElementById("prev"); // Função para passar a pagina do livro
         prev.addEventListener("click", function(){
-            rendition.prev();
+            redention.prev();
         })
 
-        var next = document.getElementById("next");
+        var next = document.getElementById("next"); // Função para voltar a pagina do livro
         next.addEventListener("click", function(){
-            rendition.next();
+            redention.next();
         })
 
-        async function obterLivros() {
+        async function obterLivros() { // retorna lista de livros 
             const resposta = await fetch("http://localhost:8000/api/books");
             const dados = await resposta.json();
 
             return  dados;
         }
 
-        const lista = await obterLivros();
+        //await para esperar o retorno da lista. precisa do type module para funcionar
+        const lista = await obterLivros();  
+
+        // para cada item da lista criar um botão com o nome do livro e abir o livro do botão
         lista.forEach(element => {
-            const butao = document.createElement("button");
-            butao.textContent = element
-            document.getElementById("bottons").append(butao);
+            const butao = document.createElement("button"); //define o elemento que vai ser criado
+            butao.textContent = element.replace(".epub", "") //da o nome para o botão de acordo com a lista
+            document.getElementById("bottons").append(butao); // adiciona botão dentro da div
+            butao.addEventListener("click", () =>{
+                book(`http://127.0.0.1:8000/api/books/${element}`)
+            })
         });
 
     </script>
